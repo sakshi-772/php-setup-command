@@ -1,0 +1,38 @@
+# Update packages
+sudo apt update && sudo apt upgrade -y
+
+# Install Apache and PHP
+sudo apt install apache2 php libapache2-mod-php -y
+
+# Enable Apache's PHP module (auto-detect version)
+PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
+sudo a2enmod php$PHP_VERSION
+
+# Restart Apache to apply changes
+sudo service apache2 restart
+
+# (Optional) Create a PHP test file
+echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/test.php
+
+# Fix permissions for /var/www/html
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R 755 /var/www/html
+
+
+After running this
+Open in browser:
+
+Copy
+Edit
+http://localhost/test.php
+You should see the PHP info page.
+
+If it works, put your serverinfo.php into:
+
+css
+Copy
+Edit
+/var/www/html/
+Then visit:
+
+http://localhost/serverinfo.php
