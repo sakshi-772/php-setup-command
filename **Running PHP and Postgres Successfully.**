@@ -1,0 +1,143 @@
+# **Running PHP and Postgres Successfully.**
+
+## PHP
+
+- note : (if PHP not installed on the machine then first do this)
+
+```java
+# for opensuse
+
+sudo zypper refresh
+
+sudo zypper install apache2 php
+
+sudo rcapache2 restart
+
+# for ubuntu based distros
+
+sudo apt update
+
+sudo apt install apache2 php libapache2-mod-php sudo service apache2 restart
+```
+
+### Step 1
+
+```java
+— set permissions using this for making sure that php files gets saved .
+
+sudo chmod -R 0777 /srv/www/htdocs #...(for all os)
+
+sudo chmod -R 0777 /var/www/html # ...(for ubuntu based distros)
+```
+
+### Step 2
+
+```java
+— start the server.
+
+sudo rcapache2 restart #for opensuse
+
+sudo service apache2 restart #for ubuntu based distros
+```
+
+### Step 3
+
+— if error isn’t being shown within the browser
+
+— use `phpinfo()` within code , search for Loaded Configuration File
+
+— config file path will be like :- `/etc/php8.3/apache2/php.ini`
+
+— use `gedit /etc/php8.3/apache2/php.ini` for editing the config file
+
+— Uncomment everything related to error within that file
+
+![](attachment:b8d34a2e-88ee-4931-884e-8bb411b12dfd:image1.png)
+
+### Step 4
+
+— restart server again
+
+```java
+sudo rcapache2 restart #for opensuse
+
+sudo service apache2 restart #for ubuntu based distros
+```
+
+## **Postgres**
+
+— Install postgresql using
+
+```java
+sudo zypper install postgresql postgresql-server # for opensuse
+
+sudo apt install postgresql postgresql-contrib # for ubuntu based distros
+```
+
+— Install the PHP PostgreSQL extension (required for using pg_connect() ) sudo zypper install php-
+
+```java
+pgsql # for opensuse
+
+sudo apt install php-pgsql # for ubuntu based distros
+```
+
+— Firstly edit the config file within location
+
+```java
+sudo gedit /var/lib/pgsql/data/pg_hba.conf # for opensuse
+
+sudo gedit /etc/postgresql/16/main/pg_hba.conf # for ubuntu based distros
+```
+
+— replace everything with ‘trust’ within this config file
+
+Running PHP and Postgres Successfully. 3
+
+![](attachment:21d341e7-1fa9-4109-9b22-215a15a0ea4c:image2.png)
+
+— this makes sure that no password is required when connecting to a database when using locally.
+
+— then restart server again
+
+```java
+sudo rcpostgresql restart # for opensuse
+
+sudo service postgresql restart # for ubuntu based distros
+```
+
+## **Opening postgresql shell**
+
+1. Switch to postgres user
+
+```java
+sudo su postgres # for opensuse
+
+sudo su - postgres # for ubuntu based distros
+```
+
+2. Enter
+
+`psql`
+
+**Sample Code for testing PHP and Database connection.**
+
+```php
+<?php
+
+$connect = pg_connect("host=localhost dbname=postgres user=postgres") or die("Connection error");
+
+if(!$connect){
+
+echo "Connected Failed";
+
+}else{
+
+echo "Connection Succeed\n";
+
+}
+
+pg_close($connect);
+
+?>
+```
